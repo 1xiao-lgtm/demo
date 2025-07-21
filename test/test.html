@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .form-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .form-group input[type="radio"], .form-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .form-group .error {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .output h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .output p {
+            margin: 5px 0;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>User Information Form</h2>
+        <form id="userForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" required>
+                <span class="error" id="nameError"></span>
+            </div>
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" required>
+                <span class="error" id="ageError"></span>
+            </div>
+            <div class="form-group">
+                <label>Gender:</label>
+                <input type="radio" name="gender" value="Male" required> Male
+                <input type="radio" name="gender" value="Female" required> Female
+                <span class="error" id="genderError"></span>
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <textarea id="address" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="city">City:</label>
+                <select id="city" required>
+                    <option value="">Select City</option>
+                    <option value="New York">New York</option>
+                    <option value="Los Angeles">Los Angeles</option>
+                    <option value="Chicago">Chicago</option>
+                </select>
+                <span class="error" id="cityError"></span>
+            </div>
+            <div class="form-group">
+                <label for="zip">Zip Code:</label>
+                <input type="text" id="zip" maxlength="6" required>
+                <span class="error" id="zipError"></span>
+            </div>
+            <div class="form-group">
+                <label>Hobbies:</label>
+                <input type="checkbox" name="hobbies" value="Watching Movies"> Watching Movies
+                <input type="checkbox" name="hobbies" value="Singing"> Singing
+                <input type="checkbox" name="hobbies" value="Listening Music"> Listening Music
+                <input type="checkbox" name="hobbies" value="Reading"> Reading
+                <input type="checkbox" name="hobbies" value="Outdoor Sports"> Outdoor Sports
+                <input type="checkbox" name="hobbies" value="Indoor Sports"> Indoor Sports
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <div class="output" id="output"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('userForm');
+        const output = document.getElementById('output');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Clear previous errors
+            document.querySelectorAll('.error').forEach(error => error.textContent = '');
+
+            // Get form values
+            const name = document.getElementById('name').value.trim();
+            const age = document.getElementById('age').value.trim();
+            const gender = document.querySelector('input[name="gender"]:checked');
+            const address = document.getElementById('address').value.trim();
+            const city = document.getElementById('city').value;
+            const zip = document.getElementById('zip').value.trim();
+            const hobbies = Array.from(document.querySelectorAll('input[name="hobbies"]:checked')).map(hobby => hobby.value);
+
+            let isValid = true;
+
+            // Validate name
+            if (!name) {
+                document.getElementById('nameError').textContent = 'Name is required.';
+                isValid = false;
+            }
+
+            // Validate age
+            if (!age || age < 10 || age > 100) {
+                document.getElementById('ageError').textContent = 'Age must be a number between 10 and 100.';
+                isValid = false;
+            }
+
+            // Validate gender
+            if (!gender) {
+                document.getElementById('genderError').textContent = 'Please select a gender.';
+                isValid = false;
+            }
+
+            // Validate city
+            if (!city) {
+                document.getElementById('cityError').textContent = 'Please select a city.';
+                isValid = false;
+            }
+
+            // Validate zip code
+            if (!/^\d{6}$/.test(zip)) {
+                document.getElementById('zipError').textContent = 'Zip code must be 6 digits.';
+                isValid = false;
+            }
+
+            // If valid, display the output
+            if (isValid) {
+                output.innerHTML = `
+                    <h3>User Information</h3>
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Age:</strong> ${age}</p>
+                    <p><strong>Gender:</strong> ${gender.value}</p>
+                    <p><strong>Address:</strong> ${address}</p>
+                    <p><strong>City:</strong> ${city}</p>
+                    <p><strong>Zip Code:</strong> ${zip}</p>
+                    <p><strong>Hobbies:</strong> ${hobbies.join(', ') || 'None'}</p>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
